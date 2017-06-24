@@ -3,7 +3,10 @@ package com.mkemp.mariobros.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mkemp.mariobros.MarioBros;
 
 /**
@@ -17,6 +20,8 @@ import com.mkemp.mariobros.MarioBros;
 public class PlayScreen implements Screen {
 
     private MarioBros game;
+    private OrthographicCamera gameCam;
+    private Viewport gamePort;
 
     private Texture texture;
 
@@ -26,6 +31,10 @@ public class PlayScreen implements Screen {
 
         // Temporary
         texture = new Texture("badlogic.jpg");
+
+        // Handle camera.
+        gameCam = new OrthographicCamera();
+        gamePort = new FitViewport(800, 480, gameCam);
     }
 
     @Override
@@ -40,6 +49,9 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Tell the sprite batch to only render what we can see.
+        game.batch.setProjectionMatrix(gameCam.combined);
+
         // Open box to start drawing.
         game.batch.begin();
 
@@ -52,6 +64,8 @@ public class PlayScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
+        // When we resize the screen, adjust the viewport.
+        gamePort.update(width, height);
     }
 
     @Override
