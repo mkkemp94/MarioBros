@@ -1,33 +1,35 @@
 package com.mkemp.mariobros;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mkemp.mariobros.Screens.PlayScreen;
 
-public class MarioBros extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+/**
+ * A Game is an application listener that delegates to a screen.
+ * It allows an application to have multiple screens.
+ */
+public class MarioBros extends Game {
+
+	public SpriteBatch batch;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+
+		// Create a PlayScreen and pass it the game.
+		setScreen(new PlayScreen(this));
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+
+		// Make the screen take care of rendering.
+		super.render();
 	}
 	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
-	}
+//	@Override
+//	public void dispose () {
+//		batch.dispose();
+//		img.dispose();
+//	}
 }
