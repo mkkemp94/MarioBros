@@ -18,6 +18,7 @@ import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
+import com.mkemp.mariobros.Tools.WorldContactListener;
 
 import static com.mkemp.mariobros.MarioBros.PPM;
 import static com.mkemp.mariobros.MarioBros.V_HEIGHT;
@@ -78,6 +79,8 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(world, map);
 
         player = new Mario(world, this);
+
+        world.setContactListener(new WorldContactListener());
     }
 
     /**
