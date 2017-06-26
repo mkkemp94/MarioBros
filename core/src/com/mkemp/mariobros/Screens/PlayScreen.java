@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -33,6 +34,7 @@ import static com.mkemp.mariobros.MarioBros.V_WIDTH;
 public class PlayScreen implements Screen {
 
     private MarioBros game;
+    private TextureAtlas atlas;
 
     private OrthographicCamera gameCam;
     private Viewport gamePort;
@@ -50,6 +52,10 @@ public class PlayScreen implements Screen {
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
         this.game = game;
+
+        // This texture atlas allows us to read from .pack files.
+        // Use an AssetManager if there are have resources to load.
+        atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
         // Handle camera.
         gameCam = new OrthographicCamera();
@@ -71,7 +77,14 @@ public class PlayScreen implements Screen {
         // Create a new B2WorldCreator, which creates everything in the game world.
         new B2WorldCreator(world, map);
 
-        player = new Mario(world);
+        player = new Mario(world, this);
+    }
+
+    /**
+     * Gets the texture atlas to retrieve character/enemy sprites from.
+     */
+    public TextureAtlas getAtlas() {
+        return atlas;
     }
 
     @Override
@@ -105,6 +118,10 @@ public class PlayScreen implements Screen {
         //Tell box2d to calculate 60 times per second.
         world.step(1/60f, 6, 2);
 
+        // Give mario the dt so hit sprite can stay attached.
+        player.update(dt);
+
+        // Attach the gamecam to the player's x position
         gameCam.position.x = player.b2body.getPosition().x;
 
         gameCam.update();
@@ -121,16 +138,22 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Open box to start drawing.
-        game.batch.begin();
-        // Close box.
-        game.batch.end();
-
         // Render the map with the updated changes.
         renderer.render();
 
         // Render Box2DDebugLines (green lines)
         b2dr.render(world, gameCam.combined);
+
+        game.batch.setProjectionMatrix(gameCam.combined);
+
+        // Open box to start drawing.
+        game.batch.begin();
+
+        // Give mario the sprite batch to draw itself (using the Sprite class)
+        player.draw(game.batch);
+
+        // Close box.
+        game.batch.end();
 
         // Tell the sprite batch to only render what we can see.
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
