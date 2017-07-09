@@ -1,0 +1,47 @@
+Class Game:
+- A Game is an application listener that delegates to a screen.
+- It allows an application to have multiple screens.
+- It executes the render() loop over and over.
+- It makes the Screen handle what happens in that render loop.
+
+Interface Screen:
+- The Screen executes logic and draws things to the screen.
+- There can be many screens.
+
+Class SpriteBatch:
+- A container that holds all images and textures.
+- When it comes time to render, it spills them out.
+- It is memory intensive, so only one should be created.
+
+ViewPorts:
+- A viewport is a window into the game world.
+- Depending on the viewport used, the game will look different on each device.
+- StretchViewport - Does not keep aspect ratio. Stretch to fit the screen.
+- ScreenViewport - World fits screen and cuts off the access. Ie large screens see more.
+- FitViewport - Scales the world to fit the screen, adding black bars where needed.
+
+Orthographic Camera:
+- Follows us around the game world and determines what the viewport displays.
+
+Scene2d.ui:
+- A layout manager for widgets that we can put on the screen.
+- For example, labels.
+- These widgets are placed on a stage and can be updated when things change.
+
+Stage:
+- A Stage is basically an empty box that can hold a table where widgets can be placed.
+
+Box2dWorld
+	bodies - containers
+		mass
+		velocity
+		location
+		angles
+		fixtures - the physical attributes of bodies
+			shape
+			density
+			friction
+			restitution - bounciness
+			
+BodyDef:
+- Defines what a body consists of.
