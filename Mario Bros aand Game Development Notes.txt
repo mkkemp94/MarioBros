@@ -44,4 +44,34 @@ Box2dWorld
 			restitution - bounciness
 			
 BodyDef:
-- Defines what a body consists of.
+- Defines what a body consists of:
+-- position
+-- type (Static, Kinematc, Dynamic)
+- Is passed as a parameter into b2body = world.createBody(bdef) to create a Body.
+
+FixtureDef:
+- Used to create a fixture, which is the physical attributes of a body.
+-- shape
+-- isSensor
+-- density
+-- friction
+-- restitution
+- Is passed as a parameter into b2body.createFixture(fdef) to attach the fixture to the body.
+
+Class Sprite:
+- Objects hold the geometry, color, and texture information for drawing 2D sprites.
+- They basically hold on to the rules for how the objects themselves work.
+
+
+Class Animation<>:
+- An animation stores one to many key frames that make up an animation.
+- Use logic to determine a state in time, from which you can determine what frame to show.
+- A timer (basically an integer that updates with how much time has passed between frames) is helpful to pass to animation.getKeyFrame(timer).
+
+Interface ContactListener:
+- Define rules for beginContact(), endContact(), preSolve() and postSolve().
+- Call world.setContactListener(YourListener) to add these rules to every Body.
+
+Box2d Filter:
+- Category : What is this fixture? (Mario, Brick, Coin) Identified by a short (power of 2).
+- Mask : What categories can this fixture collide with?

@@ -13,6 +13,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mkemp.mariobros.Screens.PlayScreen;
 
+import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
+import static com.mkemp.mariobros.MarioBros.COIN_BIT;
+import static com.mkemp.mariobros.MarioBros.DEFAULT_BIT;
+import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
 
 /**
@@ -137,6 +141,8 @@ public class Mario extends Sprite {
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / PPM);
+        fdef.filter.categoryBits = MARIO_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | COIN_BIT | BRICK_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
