@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mkemp.mariobros.Scenes.Hud;
 
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.DESTROYED_BIT;
@@ -32,6 +33,9 @@ public class Brick extends InteractiveTileObject {
         // Get the cell at the current position being hit,
         // and set it to null - it's destroyed.
         getCell().setTile(null);
+
+        // Update score.
+        Hud.addScore(200);
 
     }
 }

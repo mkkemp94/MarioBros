@@ -61,7 +61,6 @@ public abstract class InteractiveTileObject {
 
     /**
      * Get the cell at this specific spot on the map.
-     * @return
      */
     public TiledMapTileLayer.Cell getCell() {
 

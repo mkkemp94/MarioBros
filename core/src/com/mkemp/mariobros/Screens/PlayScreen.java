@@ -124,6 +124,9 @@ public class PlayScreen implements Screen {
         // Give mario the dt so hit sprite can stay attached.
         player.update(dt);
 
+        // Pass dt to hud to update countdown timer.
+        hud.update(dt);
+
         // Attach the gamecam to the player's x position
         gameCam.position.x = player.b2body.getPosition().x;
 
