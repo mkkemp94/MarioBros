@@ -38,13 +38,16 @@ public class Coin extends InteractiveTileObject {
     public void onHeadHit() {
         Gdx.app.log("Coin", "Collision");
 
-        // Set the image of this coin to blank.
-        getCell().setTile(tileSet.getTile(BLANK_COIN));
-        Hud.addScore(100);
-
+        // Play bump sound if coin is blank or coin sound if not.
         if (getCell().getTile().getId() == BLANK_COIN)
             MarioBros.manager.get("audio/sounds/bump.wav", Sound.class).play();
         else
             MarioBros.manager.get("audio/sounds/coin.wav", Sound.class).play();
+
+        // Set the image of this coin to blank.
+        getCell().setTile(tileSet.getTile(BLANK_COIN));
+        Hud.addScore(100);
+
+
     }
 }
