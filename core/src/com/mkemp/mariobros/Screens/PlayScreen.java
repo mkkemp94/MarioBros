@@ -3,6 +3,7 @@ package com.mkemp.mariobros.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -49,6 +50,7 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr; // lets us see what's going on
 
     private Mario player;
+    private Music music;
 
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
@@ -81,6 +83,10 @@ public class PlayScreen implements Screen {
         player = new Mario(world, this);
 
         world.setContactListener(new WorldContactListener());
+
+        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     /**

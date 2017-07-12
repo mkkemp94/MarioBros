@@ -1,9 +1,11 @@
 package com.mkemp.mariobros.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
@@ -36,6 +38,9 @@ public class Brick extends InteractiveTileObject {
 
         // Update score.
         Hud.addScore(200);
+
+        // Play sound
+        MarioBros.manager.get("audio/sounds/breakblock.wav", Sound.class).play();
 
     }
 }

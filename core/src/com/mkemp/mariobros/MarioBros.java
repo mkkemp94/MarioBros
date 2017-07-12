@@ -1,6 +1,9 @@
 package com.mkemp.mariobros;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mkemp.mariobros.Screens.PlayScreen;
 
@@ -21,10 +24,20 @@ public class MarioBros extends Game {
 	public static final short DESTROYED_BIT = 16;
 
 	public SpriteBatch batch;
-	
+
+	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
+	You should pass it around. But we're just using static to save time. */
+	public static AssetManager manager;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		manager = new AssetManager();
+		manager.load("audio/music/mario_music.ogg", Music.class);
+		manager.load("audio/sound/coin.wav", Sound.class);
+		manager.load("audio/sound/bump.wav", Sound.class);
+		manager.load("audio/sound/breakblock.wav", Sound.class);
+		manager.finishLoading();
 
 		// Create a PlayScreen and pass it the game.
 		setScreen(new PlayScreen(this));
@@ -33,13 +46,19 @@ public class MarioBros extends Game {
 	@Override
 	public void render () {
 
+		// There is an Async part of asset manager.
+		// Iff all are loaded...
+//		if (manager.update()) {
+//			// Do stuff
+//		}
+
 		// Make the screen take care of rendering.
 		super.render();
 	}
 	
-//	@Override
-//	public void dispose () {
-//		batch.dispose();
-//		img.dispose();
-//	}
+	@Override
+	public void dispose () {
+		manager.dispose();
+		batch.dispose();
+	}
 }
