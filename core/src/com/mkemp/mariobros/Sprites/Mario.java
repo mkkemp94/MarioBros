@@ -15,8 +15,10 @@ import com.mkemp.mariobros.Screens.PlayScreen;
 
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
-import static com.mkemp.mariobros.MarioBros.DEFAULT_BIT;
+import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
+import static com.mkemp.mariobros.MarioBros.GROUND_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
+import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
 
 /**
@@ -40,9 +42,9 @@ public class Mario extends Sprite {
      * We're passing the region we want to Sprite's constructor using super().
      * Below, we're getting that texture from the Sprite class.
      */
-    public Mario(World world, PlayScreen screen) {
+    public Mario(PlayScreen screen) {
         super(screen.getAtlas().findRegion("little_mario"));
-        this.world = world;
+        this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -142,7 +144,12 @@ public class Mario extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / PPM);
         fdef.filter.categoryBits = MARIO_BIT;
-        fdef.filter.maskBits = DEFAULT_BIT | COIN_BIT | BRICK_BIT;
+        fdef.filter.maskBits = GROUND_BIT |
+                COIN_BIT |
+                BRICK_BIT |
+                ENEMY_BIT |
+                OBJECT_BIT
+        ;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
