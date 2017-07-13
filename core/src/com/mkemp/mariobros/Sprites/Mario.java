@@ -16,6 +16,7 @@ import com.mkemp.mariobros.Screens.PlayScreen;
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
+import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.GROUND_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
@@ -148,7 +149,8 @@ public class Mario extends Sprite {
                 COIN_BIT |
                 BRICK_BIT |
                 ENEMY_BIT |
-                OBJECT_BIT
+                OBJECT_BIT |
+                ENEMY_HEAD_BIT
         ;
 
         fdef.shape = shape;
