@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
-import com.mkemp.mariobros.Sprites.Goomba;
+import com.mkemp.mariobros.Sprites.Enemy;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
 import com.mkemp.mariobros.Tools.WorldContactListener;
@@ -47,13 +47,14 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    // Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr; // lets us see what's going on
+    private B2WorldCreator creator;
 
     private Mario player;
     private Music music;
 
-    private Goomba goomba;
 
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
@@ -81,7 +82,7 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
 
         // Create a new B2WorldCreator, which creates everything in the game world.
-        new B2WorldCreator(this);
+        creator = new B2WorldCreator(this);
 
         player = new Mario(this);
 
@@ -90,8 +91,6 @@ public class PlayScreen implements Screen {
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.play();
-
-        goomba = new Goomba(this, 5.64f, .16f);
     }
 
     /**
@@ -135,8 +134,10 @@ public class PlayScreen implements Screen {
         // Give mario the dt so hit sprite can stay attached.
         player.update(dt);
 
-        // updat goomba
-        goomba.update(dt);
+        // Will later change this to getEnemy()
+        for (Enemy enemy : creator.getGoombas()) {
+            enemy.update(dt);
+        }
 
         // Pass dt to hud to update countdown timer.
         hud.update(dt);
@@ -172,7 +173,10 @@ public class PlayScreen implements Screen {
         // Give mario the sprite batch to draw itself (using the Sprite class)
         player.draw(game.batch);
 
-        goomba.draw(game.batch);
+        // Will later change this to getEnemy()
+        for (Enemy enemy : creator.getGoombas()) {
+            enemy.draw(game.batch);
+        }
 
         // Close box.
         game.batch.end();
