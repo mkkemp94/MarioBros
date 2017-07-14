@@ -1,4 +1,4 @@
-package com.mkemp.mariobros.Sprites;
+package com.mkemp.mariobros.Sprites.TileObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

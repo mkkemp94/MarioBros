@@ -13,14 +13,20 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Sprites.Enemies.Enemy;
+import com.mkemp.mariobros.Sprites.Items.Item;
+import com.mkemp.mariobros.Sprites.Items.ItemDef;
+import com.mkemp.mariobros.Sprites.Items.Mushroom;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
 import com.mkemp.mariobros.Tools.WorldContactListener;
+
+import java.util.PriorityQueue;
 
 import static com.mkemp.mariobros.MarioBros.PPM;
 import static com.mkemp.mariobros.MarioBros.V_HEIGHT;
@@ -55,6 +61,8 @@ public class PlayScreen implements Screen {
     private Mario player;
     private Music music;
 
+    private Array<Item> items;
+    private PriorityQueue<ItemDef> itemsToSpawn;
 
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
@@ -91,6 +99,22 @@ public class PlayScreen implements Screen {
         music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.play();
+
+        items = new Array<Item>();
+        itemsToSpawn = new PriorityQueue<ItemDef>();
+    }
+
+    public void spawnItem(ItemDef idef) {
+        itemsToSpawn.add(idef);
+    }
+
+    public void handleSpawningItems() {
+        if (!itemsToSpawn.isEmpty()) {
+            ItemDef idef = itemsToSpawn.poll();
+            if (idef.type == Mushroom.class) {
+                items.add(new Mushroom(this, idef.position.x, idef.position.y));
+            }
+        }
     }
 
     /**
@@ -123,10 +147,12 @@ public class PlayScreen implements Screen {
 
     /**
      * This method does all the updating of the game world.
+     * It is called by render()
      * Get input, update the camera
      */
     public void update(float dt) {
         handleInput(dt);
+        handleSpawningItems();
 
         //Tell box2d to calculate 60 times per second.
         world.step(1/60f, 6, 2);
@@ -137,9 +163,14 @@ public class PlayScreen implements Screen {
         // Will later change this to getEnemy()
         for (Enemy enemy : creator.getGoombas()) {
             enemy.update(dt);
+
+            // Set active if close enough
             if (enemy.getX() < player.getX() + 224 / PPM)
                 enemy.b2body.setActive(true);
         }
+
+        for (Item item : items)
+            item.update(dt);
 
         // Pass dt to hud to update countdown timer.
         hud.update(dt);
@@ -153,7 +184,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         // Calculate any changes.
         update(delta);
 
@@ -176,9 +206,11 @@ public class PlayScreen implements Screen {
         player.draw(game.batch);
 
         // Will later change this to getEnemy()
-        for (Enemy enemy : creator.getGoombas()) {
+        for (Enemy enemy : creator.getGoombas())
             enemy.draw(game.batch);
-        }
+
+        for (Item item : items)
+            item.draw(game.batch);
 
         // Close box.
         game.batch.end();
