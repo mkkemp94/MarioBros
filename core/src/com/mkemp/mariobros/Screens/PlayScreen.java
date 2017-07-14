@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
-import com.mkemp.mariobros.Sprites.Enemy;
+import com.mkemp.mariobros.Sprites.Enemies.Enemy;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
 import com.mkemp.mariobros.Tools.WorldContactListener;
@@ -137,6 +137,8 @@ public class PlayScreen implements Screen {
         // Will later change this to getEnemy()
         for (Enemy enemy : creator.getGoombas()) {
             enemy.update(dt);
+            if (enemy.getX() < player.getX() + 224 / PPM)
+                enemy.b2body.setActive(true);
         }
 
         // Pass dt to hud to update countdown timer.

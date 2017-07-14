@@ -1,4 +1,4 @@
-package com.mkemp.mariobros.Sprites;
+package com.mkemp.mariobros.Sprites.Enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,7 +24,7 @@ import static com.mkemp.mariobros.MarioBros.PPM;
  * Created by mkemp on 7/12/17.
  */
 
-public class Goomba extends Enemy {
+public class Goomba extends com.mkemp.mariobros.Sprites.Enemies.Enemy {
 
     private float stateTime;
     private Animation<TextureRegion> walkAnimation;

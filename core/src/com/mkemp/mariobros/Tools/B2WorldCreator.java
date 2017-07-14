@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mkemp.mariobros.Screens.PlayScreen;
 import com.mkemp.mariobros.Sprites.Brick;
 import com.mkemp.mariobros.Sprites.Coin;
-import com.mkemp.mariobros.Sprites.Goomba;
+import com.mkemp.mariobros.Sprites.Enemies.Goomba;
 
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
