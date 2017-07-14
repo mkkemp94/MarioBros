@@ -9,8 +9,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mkemp.mariobros.Sprites.Enemy;
 import com.mkemp.mariobros.Sprites.InteractiveTileObject;
 
+import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
+import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 
 /**
  * Created by mkemp on 6/26/17.
@@ -49,8 +51,20 @@ public class WorldContactListener implements ContactListener {
             case ENEMY_HEAD_BIT | MARIO_BIT:
                 if (fixA.getFilterData().categoryBits == ENEMY_HEAD_BIT)
                     ((Enemy) fixA.getUserData()).hitOnHead();
-                else if (fixB.getFilterData().categoryBits == ENEMY_HEAD_BIT)
+                else
                     ((Enemy) fixB.getUserData()).hitOnHead();
+                break;
+
+            case ENEMY_BIT | OBJECT_BIT:
+                if (fixA.getFilterData().categoryBits == ENEMY_BIT)
+                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                else
+                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
+            case MARIO_BIT | ENEMY_BIT:
+                Gdx.app.log("Mario", "Died");
+                break;
         }
     }
 
