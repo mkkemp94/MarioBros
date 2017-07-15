@@ -26,7 +26,7 @@ import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
 import com.mkemp.mariobros.Tools.WorldContactListener;
 
-import java.util.PriorityQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.mkemp.mariobros.MarioBros.PPM;
 import static com.mkemp.mariobros.MarioBros.V_HEIGHT;
@@ -62,7 +62,7 @@ public class PlayScreen implements Screen {
     private Music music;
 
     private Array<Item> items;
-    private PriorityQueue<ItemDef> itemsToSpawn;
+    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
@@ -101,7 +101,7 @@ public class PlayScreen implements Screen {
         music.play();
 
         items = new Array<Item>();
-        itemsToSpawn = new PriorityQueue<ItemDef>();
+        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
     }
 
     public void spawnItem(ItemDef idef) {

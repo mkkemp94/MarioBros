@@ -2,6 +2,7 @@ package com.mkemp.mariobros.Sprites.TileObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
@@ -16,8 +17,8 @@ import static com.mkemp.mariobros.MarioBros.DESTROYED_BIT;
 
 public class Brick extends InteractiveTileObject {
 
-    public Brick(PlayScreen screen, Rectangle bounds) {
-        super(screen, bounds);
+    public Brick(PlayScreen screen, MapObject object) {
+        super(screen, object);
         fixture.setUserData(this);
 
         // Set filter category to make this object read as a brick.
