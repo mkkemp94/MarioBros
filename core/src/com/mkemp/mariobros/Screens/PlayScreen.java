@@ -79,7 +79,7 @@ public class PlayScreen implements Screen {
 
         // Handle rendering tiled map.
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("custom_level.tmx");
+        map = mapLoader.load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 

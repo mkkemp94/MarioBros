@@ -7,10 +7,13 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mkemp.mariobros.Sprites.Enemies.Enemy;
+import com.mkemp.mariobros.Sprites.Items.Item;
+import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Sprites.TileObjects.InteractiveTileObject;
 
 import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
+import static com.mkemp.mariobros.MarioBros.ITEM_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 
@@ -69,6 +72,20 @@ public class WorldContactListener implements ContactListener {
             case ENEMY_BIT | ENEMY_BIT:
                 ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
                 ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
+            case ITEM_BIT | OBJECT_BIT:
+                if (fixA.getFilterData().categoryBits == ITEM_BIT)
+                    ((Item) fixA.getUserData()).reverseVelocity(true, false);
+                else
+                    ((Item) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
+            case ITEM_BIT | MARIO_BIT:
+                if (fixA.getFilterData().categoryBits == ITEM_BIT)
+                    ((Item) fixA.getUserData()).use((Mario) fixB.getUserData());
+                else
+                    ((Item) fixB.getUserData()).use((Mario) fixA.getUserData());
                 break;
         }
     }

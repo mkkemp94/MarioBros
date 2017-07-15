@@ -18,6 +18,7 @@ import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.GROUND_BIT;
+import static com.mkemp.mariobros.MarioBros.ITEM_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
@@ -150,7 +151,8 @@ public class Mario extends Sprite {
                 BRICK_BIT |
                 ENEMY_BIT |
                 OBJECT_BIT |
-                ENEMY_HEAD_BIT
+                ENEMY_HEAD_BIT |
+                ITEM_BIT
         ;
 
         fdef.shape = shape;
