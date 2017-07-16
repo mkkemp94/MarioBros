@@ -75,3 +75,6 @@ Interface ContactListener:
 Box2d Filter:
 - Category : What is this fixture? (Mario, Brick, Coin) Identified by a short (power of 2).
 - Mask : What categories can this fixture collide with?
+- Good to add to an object as its fixture is being created. It can be done after, too.
+- fdef.filter.categoryBits = MARIO_BIT to say that this object is of the category MARIO_BIT.
+- fdef.filter.maskBits = DEF_BIT | COIN_BIT to say he can collide with these categories.

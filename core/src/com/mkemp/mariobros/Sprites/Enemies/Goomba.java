@@ -116,7 +116,5 @@ public class Goomba extends com.mkemp.mariobros.Sprites.Enemies.Enemy {
         // colliding with two or more objects?
         setToDestroy = true;
 
-
-
     }
 }
