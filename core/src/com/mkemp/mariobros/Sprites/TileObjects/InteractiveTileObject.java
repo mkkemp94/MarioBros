@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 import static com.mkemp.mariobros.MarioBros.PPM;
 
@@ -54,7 +55,7 @@ public abstract class InteractiveTileObject {
         fixture = body.createFixture(fdef);
     }
 
-    public abstract void onHeadHit();
+    public abstract void onHeadHit(Mario mario);
 
     /**
      * Set an object created here to have ta specific filter category.

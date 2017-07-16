@@ -3,10 +3,10 @@ package com.mkemp.mariobros.Sprites.TileObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.math.Rectangle;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.DESTROYED_BIT;
@@ -26,21 +26,25 @@ public class Brick extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit() {
-        Gdx.app.log("Brick", "Collision");
+    public void onHeadHit(Mario mario) {
 
-        // Destroy this brick by changing its category.
-        setCategoryFilter(DESTROYED_BIT);
+        if (mario.isBig()) {
+            Gdx.app.log("Brick", "Collision");
 
-        // Get the cell at the current position being hit,
-        // and set it to null - it's destroyed.
-        getCell().setTile(null);
+            // Destroy this brick by changing its category.
+            setCategoryFilter(DESTROYED_BIT);
 
-        // Update score.
-        Hud.addScore(200);
+            // Get the cell at the current position being hit,
+            // and set it to null - it's destroyed.
+            getCell().setTile(null);
 
-        // Play sound
-        MarioBros.manager.get("audio/sounds/breakblock.wav", Sound.class).play();
+            // Update score.
+            Hud.addScore(200);
 
+            // Play sound
+            MarioBros.manager.get("audio/sounds/breakblock.wav", Sound.class).play();
+        } else {
+            MarioBros.manager.get("audio/sounds/bump.wav", Sound.class).play();
+        }
     }
 }

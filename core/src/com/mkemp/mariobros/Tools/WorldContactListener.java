@@ -11,10 +11,13 @@ import com.mkemp.mariobros.Sprites.Items.Item;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Sprites.TileObjects.InteractiveTileObject;
 
+import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
+import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.ITEM_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
+import static com.mkemp.mariobros.MarioBros.MARIO_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 
 /**
@@ -34,19 +37,16 @@ public class WorldContactListener implements ContactListener {
         // Collision definition
         int cdef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
-        // Figure out which fixture is which.
-        if (fixA.getUserData() == "head" || fixB.getUserData() == "head") {
-            Fixture head = (fixA.getUserData() == "head") ? fixA : fixB;
-            Fixture object = (fixA == head) ? fixB : fixA;
-
-            // Call onHeadHit() for interactive tile objects.
-            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
-                ((InteractiveTileObject) object.getUserData()).onHeadHit();
-            }
-        }
-
         // We or'd the two fixtures up above and stored it in cdef.
         switch (cdef) {
+
+            case BRICK_BIT | MARIO_HEAD_BIT:
+            case MARIO_HEAD_BIT | COIN_BIT:
+                if (fixA.getFilterData().categoryBits == MARIO_HEAD_BIT)
+                    ((InteractiveTileObject) fixB.getUserData()).onHeadHit((Mario) fixA.getUserData());
+                else
+                    ((InteractiveTileObject) fixA.getUserData()).onHeadHit((Mario) fixB.getUserData());
+                break;
 
             // Enemy Head and Mario collide.
             // If fixA is the enemy head, get its object type and run

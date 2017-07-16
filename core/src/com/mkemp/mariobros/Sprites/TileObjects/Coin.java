@@ -10,6 +10,7 @@ import com.mkemp.mariobros.Scenes.Hud;
 import com.mkemp.mariobros.Screens.PlayScreen;
 import com.mkemp.mariobros.Sprites.Items.ItemDef;
 import com.mkemp.mariobros.Sprites.Items.Mushroom;
+import com.mkemp.mariobros.Sprites.Mario;
 
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
@@ -39,7 +40,7 @@ public class Coin extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit() {
+    public void onHeadHit(Mario mario) {
         Gdx.app.log("Coin", "Collision");
 
         // Play bump sound if coin is blank or coin sound if not.
