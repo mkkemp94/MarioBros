@@ -50,6 +50,7 @@ public class Mario extends Sprite {
     private boolean marioIsBig;
     private boolean runGrowAnimation;
     private boolean timeToDefineBigMario;
+    private boolean timeToRedefineMario;
 
     /**
      * We're passing the region we want to Sprite's constructor using super().
@@ -116,6 +117,8 @@ public class Mario extends Sprite {
         setRegion(getFrame(dt));
         if (timeToDefineBigMario)
             defineBigMario();
+        if (timeToRedefineMario)
+            redefineMario();
     }
 
     /**
@@ -187,6 +190,61 @@ public class Mario extends Sprite {
         timeToDefineBigMario = true;
         setBounds(getX(), getY(), getWidth(), getHeight() * 2);
         MarioBros.manager.get("audio/sounds/powerup.wav", Sound.class).play();
+    }
+
+    public boolean isBig() {
+        return marioIsBig;
+    }
+
+    /**
+     * When Mario is hit by an enemy
+     */
+    public void hit() {
+        if (marioIsBig) {
+            marioIsBig = false;
+            timeToRedefineMario = true;
+            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+            MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+        } else {
+            MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+        }
+    }
+
+    public void redefineMario() {
+        Vector2 currentPosition = b2body.getPosition();
+        world.destroyBody(b2body);
+
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(currentPosition);
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = world.createBody(bdef);
+
+        FixtureDef fdef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        shape.setRadius(6 / PPM);
+        fdef.filter.categoryBits = MARIO_BIT;
+        fdef.filter.maskBits = GROUND_BIT |
+                COIN_BIT |
+                BRICK_BIT |
+                ENEMY_BIT |
+                OBJECT_BIT |
+                ENEMY_HEAD_BIT |
+                ITEM_BIT
+        ;
+
+        fdef.shape = shape;
+        b2body.createFixture(fdef).setUserData(this);
+
+        // Create sensor on his head.
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-2 / PPM, 6 / PPM), new Vector2(2 / PPM, 6 / PPM));
+        fdef.filter.categoryBits = MARIO_HEAD_BIT;
+        fdef.shape = head;
+        fdef.isSensor = true;
+
+        b2body.createFixture(fdef).setUserData(this);
+
+        timeToRedefineMario = false;
     }
 
     /**
@@ -270,7 +328,4 @@ public class Mario extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public boolean isBig() {
-        return marioIsBig;
-    }
 }

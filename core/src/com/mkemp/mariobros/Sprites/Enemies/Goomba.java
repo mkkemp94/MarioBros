@@ -1,5 +1,6 @@
 package com.mkemp.mariobros.Sprites.Enemies;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Screens.PlayScreen;
 
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
@@ -115,6 +117,7 @@ public class Goomba extends com.mkemp.mariobros.Sprites.Enemies.Enemy {
         // Bodies can't be deleted at this time because what if the body is
         // colliding with two or more objects?
         setToDestroy = true;
+        MarioBros.manager.get("audio/sounds/stomp.wav", Sound.class).play();
 
     }
 }
