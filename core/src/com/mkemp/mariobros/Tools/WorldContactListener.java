@@ -91,6 +91,13 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Item) fixB.getUserData()).use((Mario) fixA.getUserData());
                 break;
+
+//            case ENEMY_BIT | COIN_BIT:
+//                if (fixA.getFilterData().categoryBits == ITEM_BIT)
+//                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+//                else
+//                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+//                break;
         }
     }
 

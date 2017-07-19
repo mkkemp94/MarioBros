@@ -1,7 +1,6 @@
 package com.mkemp.mariobros.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,6 +23,7 @@ import com.mkemp.mariobros.Sprites.Items.ItemDef;
 import com.mkemp.mariobros.Sprites.Items.Mushroom;
 import com.mkemp.mariobros.Sprites.Mario;
 import com.mkemp.mariobros.Tools.B2WorldCreator;
+import com.mkemp.mariobros.Tools.Controller;
 import com.mkemp.mariobros.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -64,6 +64,8 @@ public class PlayScreen implements Screen {
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
+    Controller controller;
+
     // We're sending the game to the screen, so we need a constructor.
     public PlayScreen(MarioBros game) {
         this.game = game;
@@ -79,7 +81,7 @@ public class PlayScreen implements Screen {
 
         // Handle rendering tiled map.
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("level1.tmx");
+        map = mapLoader.load("custom_level.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
@@ -102,6 +104,9 @@ public class PlayScreen implements Screen {
 
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
+        controller = new Controller(game);
+
     }
 
     public void spawnItem(ItemDef idef) {
@@ -133,18 +138,37 @@ public class PlayScreen implements Screen {
      * Handle any input to the screen.
      */
     public void handleInput(float dt) {
-        if (Gdx.input.isTouched()) {
-            gameCam.position.x += 100 * dt;
-        }
+
+//        if (Gdx.input.isTouched()) {
+//            gameCam.position.x += 100 * dt;
+//        }
 
         // Only do if not dead
+//        if (player.currentState != Mario.State.DEAD) {
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || controller.isUpPressed()) {
+//                player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+//            }
+//            if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed())
+//                    && player.b2body.getLinearVelocity().x <= 2) {
+//                player.b2body.applyLinearImpulse(new Vector2(0.07f, 0), player.b2body.getWorldCenter(), true);
+//            }
+//            if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isRightPressed())
+//                    && player.b2body.getLinearVelocity().x >= -2) {
+//                player.b2body.applyLinearImpulse(new Vector2(-0.07f, 0), player.b2body.getWorldCenter(), true);
+//            }
+//        }
+
         if (player.currentState != Mario.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+            if (controller.isRightPressed())
+                player.b2body.setLinearVelocity(new Vector2(1, player.b2body.getLinearVelocity().y));
+            else if (controller.isLeftPressed())
+                player.b2body.setLinearVelocity(new Vector2(-1, player.b2body.getLinearVelocity().y));
+            else
+                player.b2body.setLinearVelocity(new Vector2(0, player.b2body.getLinearVelocity().y));
+            if (controller.isUpPressed()) {
                 player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
-                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
-                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+                controller.releaseUpPressed();
+            }
         }
     }
 
@@ -168,7 +192,7 @@ public class PlayScreen implements Screen {
             enemy.update(dt);
 
             // Set active if close enough
-            if (enemy.getX() < player.getX() + 224 / PPM)
+            if (enemy.getX() < player.getX() + 300 / PPM)
                 enemy.b2body.setActive(true);
         }
 
@@ -200,7 +224,10 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         // Render Box2DDebugLines (green lines)
-        b2dr.render(world, gameCam.combined);
+        //b2dr.render(world, gameCam.combined);
+
+        // Draw controller!
+        controller.draw();
 
         // This should be called whenever the camera is altered.
         // Combine the camera's view and projection matrices.
@@ -253,6 +280,8 @@ public class PlayScreen implements Screen {
 
         // When we resize the screen, adjust the viewport.
         gamePort.update(width, height);
+
+        controller.resize(width, height);
     }
 
     public TiledMap getMap() {
