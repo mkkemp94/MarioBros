@@ -177,7 +177,8 @@ public class Mario extends Sprite {
     }
 
     /**
-     * Based on what our body is currently doing, return its state.
+     * Based on what our body is currently doing, get its state.
+     * @return : the body's state
      */
     private State getState() {
         if (marioIsDead)
@@ -205,12 +206,34 @@ public class Mario extends Sprite {
         MarioBros.manager.get("audio/sounds/powerup.wav", Sound.class).play();
     }
 
+    /**
+     * Getter for whether mario is dead or not.
+     * @return : true or false
+     */
+    public boolean isDead() {
+        return marioIsDead;
+    }
+
+    /**
+     * Getter for the state timer.
+     * @return : the time mario has been in this state
+     */
+    public float getStateTimer() {
+        return stateTimer;
+    }
+
+    /**
+     * Getter for whether mario is big or not.
+     * @return : true or false
+     */
     public boolean isBig() {
         return marioIsBig;
     }
 
     /**
-     * When Mario is hit by an enemy
+     * This is called when Mario is hit by an enemy.
+     * If mario is big, make him small.
+     * If mario is small, he dies.
      */
     public void hit() {
         if (marioIsBig) {
@@ -219,7 +242,7 @@ public class Mario extends Sprite {
             setBounds(getX(), getY(), getWidth(), getHeight() / 2);
             MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
         } else {
-            MarioBros.manager.get("audio/sounds/mario_music.ogg", Music.class).stop();
+            MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
             MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
             marioIsDead = true;
             Filter filter = new Filter();
@@ -230,6 +253,10 @@ public class Mario extends Sprite {
         }
     }
 
+    /**
+     * Destroy the current big Mario.
+     * Then, create a new small one.
+     */
     public void redefineMario() {
         Vector2 currentPosition = b2body.getPosition();
         world.destroyBody(b2body);

@@ -188,6 +188,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         // Calculate any changes.
         update(delta);
 
@@ -195,12 +196,15 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render the map with the updated changes.
+        // Render the tiled map with the updated changes.
         renderer.render();
 
         // Render Box2DDebugLines (green lines)
         b2dr.render(world, gameCam.combined);
 
+        // This should be called whenever the camera is altered.
+        // Combine the camera's view and projection matrices.
+        // Convert world coordinates to camera screen coordinates.
         game.batch.setProjectionMatrix(gameCam.combined);
 
         // Open box to start drawing.
@@ -224,6 +228,24 @@ public class PlayScreen implements Screen {
 
         // Draw the hud.
         hud.stage.draw();
+
+        // If game over occurs after we've updated and drawn for the last time,
+        // set game over screen.
+        if (gameOver()) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+    }
+
+    /**
+     * Gets whether or not the game is over.
+     * @return : true or false
+     */
+    public boolean gameOver() {
+        if (player.currentState == Mario.State.DEAD && player.getStateTimer() > 3) {
+            return true;
+        }
+        return false;
     }
 
     @Override
