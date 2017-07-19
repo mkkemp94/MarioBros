@@ -164,7 +164,7 @@ public class PlayScreen implements Screen {
         player.update(dt);
 
         // Will later change this to getEnemy()
-        for (Enemy enemy : creator.getGoombas()) {
+        for (Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
 
             // Set active if close enough
@@ -214,7 +214,7 @@ public class PlayScreen implements Screen {
         player.draw(game.batch);
 
         // Will later change this to getEnemy()
-        for (Enemy enemy : creator.getGoombas())
+        for (Enemy enemy : creator.getEnemies())
             enemy.draw(game.batch);
 
         for (Item item : items)
