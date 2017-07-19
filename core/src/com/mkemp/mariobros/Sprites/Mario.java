@@ -17,6 +17,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Enemies.Enemy;
+import com.mkemp.mariobros.Sprites.Enemies.Turtle;
 
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
@@ -28,6 +30,8 @@ import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
+import static com.mkemp.mariobros.Sprites.Enemies.Turtle.KICK_LEFT_SPEED;
+import static com.mkemp.mariobros.Sprites.Enemies.Turtle.KICK_RIGHT_SPEED;
 
 /**
  * Created by kempm on 6/24/2017.
@@ -235,21 +239,27 @@ public class Mario extends Sprite {
      * If mario is big, make him small.
      * If mario is small, he dies.
      */
-    public void hit() {
-        if (marioIsBig) {
-            marioIsBig = false;
-            timeToRedefineMario = true;
-            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-            MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
-        } else {
-            MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
-            MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
-            marioIsDead = true;
-            Filter filter = new Filter();
-            filter.maskBits = MarioBros.NOTHING_BIT;
-            for (Fixture fixture : b2body.getFixtureList())
-                fixture.setFilterData(filter);
-            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+    public void hit(Enemy enemy) {
+        if (enemy instanceof Turtle && ((Turtle) enemy).getCurrentState() == Turtle.State.STANDING_SHELL) {
+            ((Turtle) enemy).kick(this.getX() <= enemy.getX() ? KICK_RIGHT_SPEED : KICK_LEFT_SPEED);
+        }
+
+        else {
+            if (marioIsBig) {
+                marioIsBig = false;
+                timeToRedefineMario = true;
+                setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+                MarioBros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+            } else {
+                MarioBros.manager.get("audio/music/mario_music.ogg", Music.class).stop();
+                MarioBros.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+                marioIsDead = true;
+                Filter filter = new Filter();
+                filter.maskBits = MarioBros.NOTHING_BIT;
+                for (Fixture fixture : b2body.getFixtureList())
+                    fixture.setFilterData(filter);
+                b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+            }
         }
     }
 

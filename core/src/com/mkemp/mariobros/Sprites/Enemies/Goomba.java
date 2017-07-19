@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mkemp.mariobros.MarioBros;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
@@ -107,7 +108,7 @@ public class Goomba extends com.mkemp.mariobros.Sprites.Enemies.Enemy {
     }
 
     @Override
-    public void hitOnHead() {
+    public void hitOnHead(Mario mario) {
 
         // We want to get rid of the body so there's no more collision, but can't do it here
         // because hitOnHead() is called from the contact listener,

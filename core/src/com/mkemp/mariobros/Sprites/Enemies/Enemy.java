@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mkemp.mariobros.Screens.PlayScreen;
+import com.mkemp.mariobros.Sprites.Mario;
 
 /**
  * Created by mkemp on 7/12/17.
@@ -28,7 +29,7 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemy();
     public abstract void update(float dt);
-    public abstract void hitOnHead();
+    public abstract void hitOnHead(Mario mario);
 
     public void reverseVelocity(boolean x, boolean y) {
         if (x) { velocity.x = -velocity.x; }
