@@ -28,7 +28,7 @@ import static com.mkemp.mariobros.MarioBros.PPM;
 
 public class B2WorldCreator {
 
-    private Array<Turtle> turtles;
+    private static Array<Turtle> turtles;
     private Array<Goomba> goombas;
 
     public B2WorldCreator(PlayScreen screen) {
@@ -100,6 +100,10 @@ public class B2WorldCreator {
     public Array<Goomba> getGoombas() {
         return goombas;
     }
+    public static void removeTurtle(Turtle turtle) {
+        turtles.removeValue(turtle, true);
+    }
+
     public Array<Enemy> getEnemies() {
         Array<Enemy> enemies = new Array<Enemy>();
         enemies.addAll(goombas);

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mkemp.mariobros.Screens.PlayScreen;
 import com.mkemp.mariobros.Sprites.Mario;
+import com.mkemp.mariobros.Tools.B2WorldCreator;
 
 import static com.mkemp.mariobros.MarioBros.BRICK_BIT;
 import static com.mkemp.mariobros.MarioBros.COIN_BIT;
@@ -142,7 +143,8 @@ public class Turtle extends Enemy {
             deadRotationDegrees += 3;
             rotate(deadRotationDegrees);
             if (stateTime > 5 && !destroyed) {
-                world.destroyBody(b2body);
+                //world.destroyBody(b2body);
+                B2WorldCreator.removeTurtle(this);
                 destroyed = true;
             }
         } else {
