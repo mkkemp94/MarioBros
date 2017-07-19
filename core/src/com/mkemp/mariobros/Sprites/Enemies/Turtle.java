@@ -1,10 +1,13 @@
 package com.mkemp.mariobros.Sprites.Enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
@@ -17,6 +20,7 @@ import static com.mkemp.mariobros.MarioBros.ENEMY_BIT;
 import static com.mkemp.mariobros.MarioBros.ENEMY_HEAD_BIT;
 import static com.mkemp.mariobros.MarioBros.GROUND_BIT;
 import static com.mkemp.mariobros.MarioBros.MARIO_BIT;
+import static com.mkemp.mariobros.MarioBros.NOTHING_BIT;
 import static com.mkemp.mariobros.MarioBros.OBJECT_BIT;
 import static com.mkemp.mariobros.MarioBros.PPM;
 
@@ -29,7 +33,7 @@ public class Turtle extends Enemy {
     public static final int KICK_LEFT_SPEED = -2;
     public static final int KICK_RIGHT_SPEED = 2;
 
-    public enum State {WALKING, STANDING_SHELL, MOVING_SHELL};
+    public enum State {WALKING, STANDING_SHELL, MOVING_SHELL, DEAD};
     public State currentState;
     public State previousState;
 
@@ -37,6 +41,7 @@ public class Turtle extends Enemy {
     private Animation<TextureRegion> walkAnimation;
     private Array<TextureRegion> frames;
     private TextureRegion shell;
+    private float deadRotationDegrees;
     private boolean setToDestroy = false;
     private boolean destroyed = false;
 
@@ -51,6 +56,7 @@ public class Turtle extends Enemy {
         walkAnimation = new Animation<TextureRegion>(0.2f, frames);
         currentState = previousState = State.WALKING;
         stateTime = 0;
+        deadRotationDegrees = 0;
 
         setBounds(getX(), getY(), 16 / PPM, 24 / PPM);
     }
@@ -131,6 +137,18 @@ public class Turtle extends Enemy {
         }
 
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - 8 / PPM);
+
+        if (currentState == State.DEAD) {
+            deadRotationDegrees += 3;
+            rotate(deadRotationDegrees);
+            if (stateTime > 5 && !destroyed) {
+                world.destroyBody(b2body);
+                destroyed = true;
+            }
+        } else {
+            b2body.setLinearVelocity(velocity);
+        }
+
         b2body.setLinearVelocity(velocity);
     }
 
@@ -144,10 +162,43 @@ public class Turtle extends Enemy {
         }
     }
 
+    @Override
+    public void onEnemyHit(Enemy enemy) {
+        if (enemy instanceof Turtle) {
+            if (((Turtle) enemy).currentState == State.MOVING_SHELL && currentState != State.MOVING_SHELL) {
+                killed();
+            }
+            else if (currentState == State.MOVING_SHELL && ((Turtle) enemy).currentState == State.WALKING) {
+                return;
+            }
+            else  {
+                reverseVelocity(true, false);
+            }
+        }
+        else if (currentState != State.MOVING_SHELL) {
+            reverseVelocity(true, false);
+        }
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        if (!destroyed)
+            super.draw(batch);
+    }
+
     public void kick(int speed) {
         velocity.x = speed;
         currentState = State.MOVING_SHELL;
     }
 
     public State getCurrentState() { return  currentState; }
+
+    public void killed() {
+        currentState = State.DEAD;
+        Filter filter = new Filter();
+        filter.maskBits = NOTHING_BIT;
+        for (Fixture fixture : b2body.getFixtureList())
+            fixture.setFilterData(filter);
+        b2body.applyLinearImpulse(new Vector2(0, 5f), b2body.getWorldCenter(), true);
+    }
 }
